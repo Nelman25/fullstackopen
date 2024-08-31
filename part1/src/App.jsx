@@ -1,66 +1,31 @@
-const Header = (props) => {
-    return <h1>{props.course}</h1>;
-};
+import { useState } from "react";
 
-const Part = (props) => {
-    return (
-        <p>
-            {props.part} {props.exercise}
-        </p>
-    );
-};
-const Content = (props) => {
-    console.log(props);
-    return (
-        <div>
-            <Part
-                part={props.parts[0].name}
-                exercise={props.parts[0].exercises}
-            />
-            <Part
-                part={props.parts[1].name}
-                exercise={props.parts[1].exercises}
-            />
-            <Part
-                part={props.parts[2].name}
-                exercise={props.parts[2].exercises}
-            />
-        </div>
-    );
-};
-
-const Total = (props) => {
-    const total =
-        props.parts[0].exercises +
-        props.parts[1].exercises +
-        props.parts[2].exercises;
-    return <p>Number of exercises {total}</p>;
-};
+const Display = ({ counter }) => <div>{counter}</div>;
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 const App = () => {
-    const course = {
-        name: "Half Stack application development",
-        parts: [
-            {
-                name: "Fundamentals of React",
-                exercises: 10,
-            },
-            {
-                name: "Using props to pass data",
-                exercises: 7,
-            },
-            {
-                name: "State of a component",
-                exercises: 14,
-            },
-        ],
+    const [counter, setCounter] = useState(0);
+    console.log("rendering with counter value ", counter);
+
+    const increaseByOne = () => {
+        console.log("increasing, value before ", counter);
+        setCounter(counter + 1);
+    };
+    const decreaseByOne = () => {
+        console.log("decreasing, value before ", counter);
+        setCounter(counter - 1);
+    };
+    const setTo0 = () => {
+        console.log("resetting to 0, value before ", counter);
+        setCounter(0);
     };
 
     return (
         <div>
-            <Header course={course.name} />
-            <Content parts={course.parts} />
-            <Total parts={course.parts} />
+            <Display counter={counter} />
+            <Button onClick={increaseByOne} text="plus" />
+            <Button onClick={decreaseByOne} text="minus" />
+            <Button onClick={setTo0} text="reset" />
         </div>
     );
 };
