@@ -5,13 +5,25 @@ const Statistics = ({ good, neutral, bad, total, average, positive }) => {
     return (
         <div>
             <h1>statistics</h1>
-            <p>good {good}</p>
-            <p>neutral {neutral}</p>
-            <p>bad {bad}</p>
-            <p>all {total}</p>
-            <p>average {average}</p>
-            <p>positive {positive}%</p>
+            <StatisticsLine text="good" value={good} />
+            <StatisticsLine text="neutral" value={neutral} />
+            <StatisticsLine text="bad" value={bad} />
+            <StatisticsLine text="total" value={total} />
+            <StatisticsLine text="average" value={average} />
+            <StatisticsLine text="positive" value={`${positive}%`} />
         </div>
+    );
+};
+
+const Button = ({ onSubmitFeedback, text }) => {
+    return <button onClick={onSubmitFeedback}>{text}</button>;
+};
+
+const StatisticsLine = ({ text, value }) => {
+    return (
+        <p>
+            {text} {value}
+        </p>
     );
 };
 
@@ -19,7 +31,6 @@ const App = () => {
     const [good, setGood] = useState(0);
     const [neutral, setNeutral] = useState(0);
     const [bad, setBad] = useState(0);
-    // const [total, setTotal] = useState(0);
 
     const total = good + bad + neutral;
     const goodScore = 1 * good;
@@ -43,9 +54,12 @@ const App = () => {
         <div>
             <div>
                 <h1>give feedback</h1>
-                <button onClick={handleGoodFeedback}>good</button>
-                <button onClick={handleNeutralFeedback}>neutral</button>
-                <button onClick={handleBadFeedback}>bad</button>
+                <Button onSubmitFeedback={handleGoodFeedback} text="good" />
+                <Button
+                    onSubmitFeedback={handleNeutralFeedback}
+                    text="neutral"
+                />
+                <Button onSubmitFeedback={handleBadFeedback} text="bad" />
             </div>
             {total === 0 ? (
                 <p>No feedback given</p>
