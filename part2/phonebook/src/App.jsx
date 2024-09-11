@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import Note from "./component/Note";
 
@@ -7,48 +8,51 @@ const App = (props) => {
     const [newNote, setNewNote] = useState("a new note...");
     const [showAll, setShowAll] = useState(true);
 
-    const addNote = (event) => {
-        event.preventDefault();
-        console.log("button clicked ", event.target);
+    const addNote = (e) => {
+        e.preventDefault();
+        console.log("Button clicked ", e.target);
+
         const noteObject = {
             content: newNote,
             important: Math.random() > 0.5,
-            id: String(notes.length + 1),
+            id: notes.length + 1,
         };
-        setNotes(notes.concat(noteObject));
-        setNewNote("");
+        if (noteObject.content !== "") {
+            setNotes(notes.concat(noteObject));
+            setNewNote("");
+        }
+
+        console.log(notes);
     };
 
-    const handleChangeNote = (event) => {
-        console.log(event.target.value);
-        setNewNote(event.target.value);
+    const handleNoteChange = (e) => {
+        console.log(e.target.value);
+        setNewNote(e.target.value);
     };
-    console.log(notes);
 
     const notesToShow = showAll
         ? notes
         : notes.filter((note) => note.important === true);
-    console.log(notesToShow);
 
     return (
         <div>
             <h1>Notes</h1>
             <ul>
                 {notesToShow.map((note) => (
-                    <Note key={note.id} content={note.content} />
+                    <Note key={note.id} note={note.content} />
                 ))}
+                <form onSubmit={addNote}>
+                    <input
+                        type="text"
+                        value={newNote}
+                        onChange={handleNoteChange}
+                    />
+                    <button type="submit">save</button>
+                </form>
+                <button onClick={() => setShowAll(!showAll)}>
+                    show {showAll ? "important" : "all"}
+                </button>
             </ul>
-            <form onSubmit={addNote}>
-                <input
-                    type="text"
-                    value={newNote}
-                    onChange={handleChangeNote}
-                />
-                <button type="submit">save</button>
-            </form>
-            <button onClick={() => setShowAll(!showAll)}>
-                Show only important notes
-            </button>
         </div>
     );
 };

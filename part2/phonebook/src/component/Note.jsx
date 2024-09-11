@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-const Note = ({ content }) => {
-    return <li>{content}</li>;
+const Note = ({ note }) => {
+    return <li>{note}</li>;
 };
 
 export default Note;
