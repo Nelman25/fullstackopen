@@ -2,13 +2,20 @@
 import { useState } from "react";
 
 const App = () => {
-    const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+    const [persons, setPersons] = useState([{ name: "Arto Hellas", id: 1 }]);
     const [newName, setNewName] = useState("");
+    const names = persons.map((person) => person.name.toLowerCase());
+    const nameAlreadyExist = names.includes(newName.toLowerCase());
 
     const addPerson = (e) => {
         e.preventDefault();
+        if (nameAlreadyExist) {
+            alert(`${newName} is already added to the phonebook`);
+            return;
+        }
         const newPerson = {
             name: newName,
+            id: persons.length + 1,
         };
         setPersons(persons.concat(newPerson));
         setNewName("");
@@ -32,7 +39,7 @@ const App = () => {
             <div>Debug: {newName}</div>
             <h2>Numbers</h2>
             {persons.map((person) => (
-                <li key={person.name}>{person.name}</li>
+                <li key={person.id}>{person.name}</li>
             ))}
         </div>
     );
