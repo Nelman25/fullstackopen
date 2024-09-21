@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import Filter from "./component/Filter";
 import PersonForm from "./component/PersonForm";
-import Persons from "./component/Persons";
-import { getAll, create, update } from "./services/services";
+import { getAll, create, update, remove } from "./services/services";
+import Person from "./component/Person";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -65,6 +65,15 @@ const App = () => {
 		setSearchText(e.target.value);
 	};
 
+	const handleDeleteContact = (name, id) => {
+		if (window.confirm(`Delete ${name}?`)) {
+			remove(id).then((removedContact) => {
+				const updatedContacts = persons.filter((person) => person.id !== id);
+				setPersons(updatedContacts);
+			});
+		}
+	};
+
 	return (
 		<div>
 			<h2>Phonebook</h2>
@@ -81,7 +90,15 @@ const App = () => {
 				onChangeNumber={handleNumberChange}
 			/>
 			<h3>Numbers</h3>
-			<Persons namesToRender={namesToRender} />
+			<ul>
+				{namesToRender.map((person) => (
+					<Person
+						key={person.id}
+						person={person}
+						onDeleteContact={handleDeleteContact}
+					/>
+				))}
+			</ul>
 		</div>
 	);
 };
