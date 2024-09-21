@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import Notes from "./component/Notes";
 import { getAll, create, update } from "./services/notes";
@@ -19,17 +20,18 @@ const App = () => {
 		setNewNote(e.target.value);
 	};
 
-	const handleFilterNotes = () => {
-		setShowAll(!showAll);
-	};
-
 	const handleToggleImportance = (id) => {
 		const note = notes.find((note) => note.id === id);
 		const changedNote = { ...note, important: !note.important };
 
-		update(id, changedNote).then((updatedNote) => {
-			setNotes(notes.map((note) => (note.id !== id ? note : updatedNote)));
-		});
+		update(id, changedNote)
+			.then((updatedNote) => {
+				setNotes(notes.map((note) => (note.id !== id ? note : updatedNote)));
+			})
+			.catch((error) => {
+				alert(`the note ${note.content} was already deleted from the server`);
+				setNotes(notes.filter((note) => note.id !== id));
+			});
 	};
 
 	const addNote = (e) => {
@@ -55,7 +57,7 @@ const App = () => {
 	return (
 		<div>
 			<h1>Notes</h1>
-			<button onClick={handleFilterNotes}>
+			<button onClick={() => setShowAll(!showAll)}>
 				{showAll ? "show important" : "show all"}
 			</button>
 			<form onSubmit={addNote}>

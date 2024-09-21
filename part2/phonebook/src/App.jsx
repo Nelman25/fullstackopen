@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./component/Filter";
 import PersonForm from "./component/PersonForm";
 import Persons from "./component/Persons";
+import { getAll, create, update } from "./services/services";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -11,22 +11,20 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState("");
 	const [searchText, setSearchText] = useState("");
 
+	useEffect(() => {
+		console.log("Effect");
+		getAll().then((contacts) => {
+			console.log("promise fulfilled");
+			setPersons(contacts);
+		});
+	}, []);
+
 	const names = persons.map((person) => person.name.toLowerCase());
 	const nameAlreadyExist = names.includes(newName.toLowerCase());
 	const namesToRender = persons.filter((person) => {
 		const personName = person.name.toLowerCase();
 		return personName.includes(searchText.toLowerCase());
 	});
-
-	useEffect(() => {
-		console.log("Effect");
-		axios.get("http://localhost:3001/persons").then((response) => {
-			console.log("promise fulfilled");
-			setPersons(response.data);
-		});
-	}, []);
-
-	console.log(persons);
 
 	const addPerson = (e) => {
 		e.preventDefault();
@@ -46,12 +44,13 @@ const App = () => {
 		const newPerson = {
 			name: newName,
 			number: newNumber,
-			id: persons.length + 1,
 		};
 
-		setPersons(persons.concat(newPerson));
-		setNewName("");
-		setNewNumber("");
+		create(newPerson).then((newContact) => {
+			setPersons(persons.concat(newContact));
+			setNewName("");
+			setNewNumber("");
+		});
 	};
 
 	const handleNameChange = (e) => {
