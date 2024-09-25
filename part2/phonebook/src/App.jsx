@@ -96,18 +96,18 @@ const App = () => {
 	};
 
 	return (
-		<div className="bg-sky-200 flex justify-center items-center min-h-[100vh] font-mono">
+		<div className="bg-amber-300 flex justify-center items-center min-h-[100vh] font-mono">
 			{/* Phone */}
-			<div className="w-[30%] min-h-[960px] bg-slate-800 rounded-3xl p-4 flex shadow-2xl">
+			<div className="w-[30%] min-h-[960px] bg-slate-800 rounded-3xl p-4 flex shadow-2xl my-16">
 				{/* Screen */}
-				<div className="bg-slate-50 grow shrink rounded-3xl p-4 mb-4">
+				<div className="bg-slate-50 grow shrink rounded-3xl p-4 mb-4 relative">
 					{/* notch */}
 					<div className="bg-slate-700 size-[1.3rem] mx-auto rounded-full flex justify-center items-center">
 						{/* camera */}
 						<div className="bg-slate-200 size-[.6rem] rounded-full"></div>
 					</div>
 					{/* content container */}
-					<div className="relative">
+					<div>
 						<h2 className="text-2xl bold text-center my-8">Phonebook</h2>
 						<Filter value={searchText} onSearch={handleChangeSearch} />
 						{isAdded ? (
@@ -122,14 +122,6 @@ const App = () => {
 										/>
 									))}
 								</ul>
-								<div>
-									<button
-										className="bg-amber-300 rounded-full size-16 text-3xl bold shadow-xl absolute right-0 bottom-[-360px]"
-										onClick={() => setIsAdded(!isAdded)}
-									>
-										+
-									</button>
-								</div>
 							</>
 						) : (
 							<PersonForm
@@ -141,6 +133,16 @@ const App = () => {
 							/>
 						)}
 					</div>
+					{isAdded && (
+						<div>
+							<button
+								className="bg-amber-300 rounded-full size-16 text-3xl bold shadow-xl absolute right-[20px] bottom-[20px]"
+								onClick={() => setIsAdded(!isAdded)}
+							>
+								+
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
