@@ -10,6 +10,7 @@ const App = () => {
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [searchText, setSearchText] = useState("");
+	const [isAdded, setIsAdded] = useState(true);
 
 	useEffect(() => {
 		console.log("Effect");
@@ -54,6 +55,7 @@ const App = () => {
 						person.id !== selectedPerson.id ? person : updatedContact
 					);
 					setPersons(updatedContacts);
+					setIsAdded(!isAdded);
 				});
 				return;
 			}
@@ -68,6 +70,7 @@ const App = () => {
 			setPersons(persons.concat(newContact));
 			setNewName("");
 			setNewNumber("");
+			setIsAdded(!isAdded);
 		});
 	};
 
@@ -93,32 +96,52 @@ const App = () => {
 	};
 
 	return (
-		// Phone
-		<div className="bg-sky-200 flex justify-center items-center min-h-[100vh]">
-			<div className="w-[35%] min-h-[800px] bg-slate-500 ">
-				<h2 className="text-2xl bold">Phonebook</h2>
-				<div>
-					filter shown with
-					<Filter value={searchText} onSearch={handleChangeSearch} />
+		<div className="bg-sky-200 flex justify-center items-center min-h-[100vh] font-mono">
+			{/* Phone */}
+			<div className="w-[30%] min-h-[960px] bg-slate-800 rounded-3xl p-4 flex shadow-2xl">
+				{/* Screen */}
+				<div className="bg-slate-50 grow shrink rounded-3xl p-4 mb-4">
+					{/* notch */}
+					<div className="bg-slate-700 size-[1.3rem] mx-auto rounded-full flex justify-center items-center">
+						{/* camera */}
+						<div className="bg-slate-200 size-[.6rem] rounded-full"></div>
+					</div>
+					{/* content container */}
+					<div className="relative">
+						<h2 className="text-2xl bold text-center my-8">Phonebook</h2>
+						<Filter value={searchText} onSearch={handleChangeSearch} />
+						{isAdded ? (
+							<>
+								<h3 className="text-2xl bold mt-8 mb-4">Contacts</h3>
+								<ul>
+									{namesToRender.map((person) => (
+										<Person
+											key={person.id}
+											person={person}
+											onDeleteContact={handleDeleteContact}
+										/>
+									))}
+								</ul>
+								<div>
+									<button
+										className="bg-amber-300 rounded-full size-16 text-3xl bold shadow-xl absolute right-0 bottom-[-360px]"
+										onClick={() => setIsAdded(!isAdded)}
+									>
+										+
+									</button>
+								</div>
+							</>
+						) : (
+							<PersonForm
+								onAddPerson={addPerson}
+								newName={newName}
+								onChangeName={handleNameChange}
+								newNumber={newNumber}
+								onChangeNumber={handleNumberChange}
+							/>
+						)}
+					</div>
 				</div>
-				<h3>Add a new</h3>
-				<PersonForm
-					onAddPerson={addPerson}
-					newName={newName}
-					onChangeName={handleNameChange}
-					newNumber={newNumber}
-					onChangeNumber={handleNumberChange}
-				/>
-				<h3>Numbers</h3>
-				<ul>
-					{namesToRender.map((person) => (
-						<Person
-							key={person.id}
-							person={person}
-							onDeleteContact={handleDeleteContact}
-						/>
-					))}
-				</ul>
 			</div>
 		</div>
 	);
