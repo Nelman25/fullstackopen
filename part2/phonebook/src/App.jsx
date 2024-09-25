@@ -19,8 +19,8 @@ const App = () => {
 		});
 	}, []);
 
-	const names = persons.map((person) => person.name.toLowerCase());
-	const nameAlreadyExist = names.includes(newName.toLowerCase());
+	const names = persons.map((person) => person.name.toLowerCase().trim());
+	const nameAlreadyExist = names.includes(newName.toLowerCase().trim());
 	const namesToRender = persons.filter((person) => {
 		const personName = person.name.toLowerCase();
 		return personName.includes(searchText.toLowerCase());
@@ -35,10 +35,28 @@ const App = () => {
 		}
 
 		if (nameAlreadyExist) {
-			alert(`${newName} is already added to the phonebook`);
-			setNewName("");
-			setNewNumber("");
-			return;
+			if (
+				window.confirm(
+					`${newName} is already added to the phonebook, replace the old number with a new one?`
+				)
+			) {
+				const selectedPerson = persons.find(
+					(person) =>
+						person.name.trim().toLowerCase() === newName.toLowerCase().trim()
+				);
+				const updatedNumber = {
+					...selectedPerson,
+					number: newNumber,
+				};
+
+				update(selectedPerson.id, updatedNumber).then((updatedContact) => {
+					const updatedContacts = persons.map((person) =>
+						person.id !== selectedPerson.id ? person : updatedContact
+					);
+					setPersons(updatedContacts);
+				});
+				return;
+			}
 		}
 
 		const newPerson = {
@@ -75,30 +93,33 @@ const App = () => {
 	};
 
 	return (
-		<div>
-			<h2>Phonebook</h2>
-			<div>
-				filter shown with
-				<Filter value={searchText} onSearch={handleChangeSearch} />
+		// Phone
+		<div className="bg-sky-200 flex justify-center items-center min-h-[100vh]">
+			<div className="w-[35%] min-h-[800px] bg-slate-500 ">
+				<h2 className="text-2xl bold">Phonebook</h2>
+				<div>
+					filter shown with
+					<Filter value={searchText} onSearch={handleChangeSearch} />
+				</div>
+				<h3>Add a new</h3>
+				<PersonForm
+					onAddPerson={addPerson}
+					newName={newName}
+					onChangeName={handleNameChange}
+					newNumber={newNumber}
+					onChangeNumber={handleNumberChange}
+				/>
+				<h3>Numbers</h3>
+				<ul>
+					{namesToRender.map((person) => (
+						<Person
+							key={person.id}
+							person={person}
+							onDeleteContact={handleDeleteContact}
+						/>
+					))}
+				</ul>
 			</div>
-			<h3>Add a new</h3>
-			<PersonForm
-				onAddPerson={addPerson}
-				newName={newName}
-				onChangeName={handleNameChange}
-				newNumber={newNumber}
-				onChangeNumber={handleNumberChange}
-			/>
-			<h3>Numbers</h3>
-			<ul>
-				{namesToRender.map((person) => (
-					<Person
-						key={person.id}
-						person={person}
-						onDeleteContact={handleDeleteContact}
-					/>
-				))}
-			</ul>
 		</div>
 	);
 };
