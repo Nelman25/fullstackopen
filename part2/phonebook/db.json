@@ -1,19 +1,9 @@
 {
   "persons": [
     {
-      "id": "e334",
-      "name": "Jonel Villaver",
-      "number": "09708075290"
-    },
-    {
       "id": "2423",
       "name": "Rj Silagan Jr.",
       "number": "09842349082"
-    },
-    {
-      "id": "14a5",
-      "name": "Dan Malibog Jr.",
-      "number": "09327282422"
     },
     {
       "id": "bf13",
@@ -26,14 +16,9 @@
       "number": "094234729022"
     },
     {
-      "id": "ce35",
-      "name": "Christopher Jhocson Sr.",
-      "number": "09423980482"
-    },
-    {
-      "id": "7a10",
-      "name": "Jonel Villaver Jr.",
-      "number": "324027849022"
+      "id": "5b5c",
+      "name": "Jonel Villaver",
+      "number": "42420394823"
     }
   ]
 }

@@ -4,6 +4,7 @@ import Filter from "./component/Filter";
 import PersonForm from "./component/PersonForm";
 import { getAll, create, update, remove } from "./services/services";
 import Person from "./component/Person";
+import Notification from "./component/Notification";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -11,6 +12,11 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState("");
 	const [searchText, setSearchText] = useState("");
 	const [isAdded, setIsAdded] = useState(true);
+	const [showNotification, setShowNotification] = useState(false);
+	const [notification, setNotification] = useState({
+		message: "",
+		name: "",
+	});
 
 	useEffect(() => {
 		console.log("Effect");
@@ -71,6 +77,15 @@ const App = () => {
 			setNewName("");
 			setNewNumber("");
 			setIsAdded(!isAdded);
+			setNotification({
+				name: newName,
+				message: "Added ",
+			});
+			setShowNotification(true);
+
+			setTimeout(() => {
+				setShowNotification(false);
+			}, 3000);
 		});
 	};
 
@@ -91,6 +106,15 @@ const App = () => {
 			remove(id).then((removedContact) => {
 				const updatedContacts = persons.filter((person) => person.id !== id);
 				setPersons(updatedContacts);
+				setIsAdded(true);
+				setNotification({
+					name: name,
+					message: "Deleted ",
+				});
+				setShowNotification(true);
+				setTimeout(() => {
+					setShowNotification(false);
+				}, 3000);
 			});
 		}
 	};
@@ -110,6 +134,12 @@ const App = () => {
 					<div>
 						<h2 className="text-2xl bold text-center my-8">Phonebook</h2>
 						<Filter value={searchText} onSearch={handleChangeSearch} />
+						{showNotification ? (
+							<Notification notification={notification} />
+						) : (
+							<></>
+						)}
+
 						{isAdded ? (
 							<>
 								<h3 className="text-2xl bold mt-8 mb-4">Contacts</h3>
