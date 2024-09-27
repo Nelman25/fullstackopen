@@ -56,13 +56,26 @@ const App = () => {
 					number: newNumber,
 				};
 
-				update(selectedPerson.id, updatedNumber).then((updatedContact) => {
-					const updatedContacts = persons.map((person) =>
-						person.id !== selectedPerson.id ? person : updatedContact
-					);
-					setPersons(updatedContacts);
-					setIsAdded(!isAdded);
-				});
+				update(selectedPerson.id, updatedNumber)
+					.then((updatedContact) => {
+						const updatedContacts = persons.map((person) =>
+							person.id !== selectedPerson.id ? person : updatedContact
+						);
+						setPersons(updatedContacts);
+						setIsAdded(!isAdded);
+					})
+					.catch((error) => {
+						setNotification({
+							name: "",
+							message:
+								"The information of the user has already been deleted from server. ",
+						});
+						setShowNotification(true);
+						setTimeout(() => {
+							setShowNotification(false);
+						}, 3000);
+						setIsAdded(!isAdded);
+					});
 				return;
 			}
 		}
@@ -121,16 +134,11 @@ const App = () => {
 
 	return (
 		<div className="bg-amber-300 flex justify-center items-center min-h-[100vh] font-mono">
-			{/* Phone */}
 			<div className="w-[30%] min-h-[960px] bg-slate-800 rounded-3xl p-4 flex shadow-2xl my-16">
-				{/* Screen */}
 				<div className="bg-slate-50 grow shrink rounded-3xl p-4 mb-4 relative">
-					{/* notch */}
 					<div className="bg-slate-700 size-[1.3rem] mx-auto rounded-full flex justify-center items-center">
-						{/* camera */}
 						<div className="bg-slate-200 size-[.6rem] rounded-full"></div>
 					</div>
-					{/* content container */}
 					<div>
 						<h2 className="text-2xl bold text-center my-8">Phonebook</h2>
 						<Filter value={searchText} onSearch={handleChangeSearch} />
