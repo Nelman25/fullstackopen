@@ -6,10 +6,9 @@ import { useEffect, useState } from "react";
 const CountryInfo = ({ countryName }) => {
 	const [countryData, setCountryData] = useState({});
 	const [countryLocation, setCountryLocation] = useState({});
-	const [weatherData, setWeatherData] = useState();
 
 	useEffect(() => {
-		const api_key = import.meta.env.VITE_SOME_KEY;
+		const api_key = "7d3ea97ed27567aff251356392514703";
 
 		axios
 			.get(
@@ -24,7 +23,6 @@ const CountryInfo = ({ countryName }) => {
 					flagImg: response.data.flags.png,
 				};
 				setCountryData(data);
-
 				axios
 					.get(
 						`http://api.openweathermap.org/geo/1.0/direct?q=${data.capital}&limit=1&appid=${api_key}`
@@ -43,7 +41,11 @@ const CountryInfo = ({ countryName }) => {
 									)}&lon=${data.lon.toFixed(2)}&appid=${api_key}`
 								)
 								.then((response) => {
-									console.log(response.data);
+									const data = Object.values(response.data);
+									data.map((data) => {
+										console.log(data);
+										console.log(data.weather);
+									});
 								});
 						});
 					})
