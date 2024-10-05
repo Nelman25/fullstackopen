@@ -36,26 +36,40 @@ const App = () => {
 	};
 
 	return (
-		<div>
-			search country <input value={searchedCountry} onChange={handleSearch} />
-			{filteredCountry.length > 10 && searchedCountry !== "" && (
-				<p>Too many matches, specify another filter.</p>
-			)}
-			<ul>
-				{filteredCountry.length <= 10 &&
-					searchedCountry !== "" &&
-					!showCountry &&
-					filteredCountry.map((country) => (
-						<CountryList
-							key={country}
-							name={country}
-							onShowCountry={handleShowCountryData}
-						/>
-					))}
-			</ul>
-			{showCountry && filteredCountry.length === 1 && (
-				<CountryInfo countryName={searchedCountry} />
-			)}
+		<div className="h-[800px] flex flex-col px-32 py-16">
+			<div className="shadow-2xl">
+				<header className="bg-blue-100 grow-0 shrink-0 basis-[5%] flex items-center px-8 py-4">
+					<input
+						value={searchedCountry}
+						id="searchbar"
+						onChange={handleSearch}
+						placeholder="Search country"
+						className="rounded-full w-[20%] focus:w-[30%] transition-all duration-200 px-4 py-2"
+					/>
+				</header>
+				<main className="bg-sky-200 h-full">
+					<div className="">
+						{filteredCountry.length > 10 && searchedCountry !== "" && (
+							<p>Too many matches, specify another filter.</p>
+						)}
+						<ul>
+							{filteredCountry.length <= 10 &&
+								searchedCountry !== "" &&
+								!showCountry &&
+								filteredCountry.map((country) => (
+									<CountryList
+										key={country}
+										name={country}
+										onShowCountry={handleShowCountryData}
+									/>
+								))}
+						</ul>
+						{showCountry && filteredCountry.length === 1 && (
+							<CountryInfo countryName={searchedCountry} />
+						)}
+					</div>
+				</main>
+			</div>
 		</div>
 	);
 };
