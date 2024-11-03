@@ -13,7 +13,10 @@ const App = () => {
 
 	useEffect(() => {
 		console.log("effect");
-		getAll().then((initialNotes) => setNotes(initialNotes));
+		getAll().then((initialNotes) => {
+			console.log(initialNotes);
+			setNotes(initialNotes);
+		});
 	}, []);
 
 	const handleNoteChange = (e) => {
