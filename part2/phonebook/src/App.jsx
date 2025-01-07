@@ -15,12 +15,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [isAdded, setIsAdded] = useState(true);
-  const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState({
-    message: "",
-    name: "",
-  });
+  const [isAdding, setIsAdding] = useState(true);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     getAll().then((contacts) => setPersons(contacts));
@@ -73,18 +69,17 @@ const App = () => {
           const updatedPerson = await update(selectedContact.id, newPerson);
           const updatedContacts = [...filteredContacts, updatedPerson];
           setPersons(updatedContacts);
-          setIsAdded(!isAdded);
+          setIsAdding(!isAdding);
         } catch (error) {
           setNotification({
             name: "",
             message:
               "The information of the user has already been deleted from server. ",
           });
-          setShowNotification(true);
           setTimeout(() => {
-            setShowNotification(false);
+            setNotification(null);
           }, 3000);
-          setIsAdded(!isAdded);
+          setIsAdding(!isAdding);
         }
       }
       return;
@@ -95,87 +90,79 @@ const App = () => {
       setPersons(persons.concat(newContact));
       setNewName("");
       setNewNumber("");
-      setIsAdded(!isAdded);
+      setIsAdding(!isAdding);
       setNotification({
         name: newName,
         message: "Added ",
       });
-      setShowNotification(true);
       setTimeout(() => {
-        setShowNotification(false);
+        setNotification(null);
       }, 3000);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDeleteContact = (name, id) => {
-    if (window.confirm(`Delete ${name}?`)) {
-      remove(id).then((removedContact) => {
-        const updatedContacts = persons.filter((person) => person.id !== id);
+  const handleDeleteContact = async (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      remove(person.id).then(() => {
+        const updatedContacts = persons.filter((p) => p.id !== person.id);
         setPersons(updatedContacts);
-        setIsAdded(true);
+        setIsAdding(true);
         setNotification({
-          name: name,
+          name: person.name,
           message: "Deleted ",
         });
-        setShowNotification(true);
         setTimeout(() => {
-          setShowNotification(false);
+          setNotification(null);
         }, 3000);
       });
     }
   };
 
   return (
-    <div className="bg-amber-300 flex justify-center items-center min-h-[100vh] font-mono">
-      <div className="w-[30%] min-h-[960px] bg-slate-800 rounded-3xl p-4 flex shadow-2xl my-16">
-        <div className="bg-slate-50 grow shrink rounded-3xl p-4 mb-4 relative">
-          <div className="bg-slate-700 size-[1.3rem] mx-auto rounded-full flex justify-center items-center">
-            <div className="bg-slate-200 size-[.6rem] rounded-full"></div>
-          </div>
-          <div>
-            <h2 className="text-2xl bold text-center my-8">Phonebook</h2>
-            <Filter value={searchText} onSearch={handleChangeSearch} />
-            {showNotification ? (
-              <Notification notification={notification} />
-            ) : (
-              <></>
-            )}
-            {isAdded ? (
-              <>
-                <h3 className="text-2xl bold mt-8 mb-4">Contacts</h3>
-                <ul>
-                  {namesToRender.map((person) => (
-                    <Person
-                      key={person.id}
-                      person={person}
-                      onDeleteContact={handleDeleteContact}
-                    />
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <PersonForm
-                onAddPerson={addPerson}
-                newName={newName}
-                onChangeName={handleNameChange}
-                newNumber={newNumber}
-                onChangeNumber={handleNumberChange}
-              />
-            )}
-          </div>
-          {isAdded && (
-            <div>
-              <button
-                className="bg-amber-300 rounded-full size-16 text-3xl bold shadow-xl absolute right-[20px] bottom-[20px]"
-                onClick={() => setIsAdded(!isAdded)}
-              >
-                +
-              </button>
-            </div>
+    <div className="min-w-[500px] w-[500px] min-h-[900px] bg-slate-800 rounded-3xl p-4 flex shadow-2xl my-16 mx-auto">
+      <div className="bg-slate-50 grow shrink rounded-3xl p-4 mb-4 relative">
+        <div className="bg-slate-700 size-[1.3rem] mx-auto rounded-full flex justify-center items-center">
+          <div className="bg-slate-200 size-[.6rem] rounded-full"></div>
+        </div>
+        <div>
+          <h2 className="text-2xl bold text-center my-8">Phonebook</h2>
+          <Filter value={searchText} onSearch={handleChangeSearch} />
+          {notification ? <Notification notification={notification} /> : <></>}
+          {isAdding ? (
+            <>
+              <h3 className="text-2xl bold mt-8 mb-4">Contacts</h3>
+              <ul>
+                {namesToRender.map((person) => (
+                  <Person
+                    key={person.id}
+                    person={person}
+                    onDeleteContact={handleDeleteContact}
+                  />
+                ))}
+              </ul>
+            </>
+          ) : (
+            <PersonForm
+              onAddPerson={addPerson}
+              newName={newName}
+              onChangeName={handleNameChange}
+              newNumber={newNumber}
+              onChangeNumber={handleNumberChange}
+            />
           )}
         </div>
+        {isAdding && (
+          <div>
+            <button
+              className="bg-amber-300 rounded-full size-16 text-3xl bold shadow-xl absolute right-[20px] bottom-[20px]"
+              onClick={() => setIsAdding(!isAdding)}
+            >
+              +
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

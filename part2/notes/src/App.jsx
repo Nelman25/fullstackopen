@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import Notes from "./component/Notes";
-import { getAll, create, update } from "./services/notes";
+import { getAll, create, update, deleteItem } from "./services/notes";
+import NoteList from "./component/NoteList";
+import NoteForm from "./component/NoteForm";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -12,11 +14,7 @@ const App = () => {
   const notesToShow = showAll ? notes : importantNotes;
 
   useEffect(() => {
-    console.log("effect");
-    getAll().then((initialNotes) => {
-      console.log(initialNotes);
-      setNotes(initialNotes);
-    });
+    getAll().then((initialNotes) => setNotes(initialNotes));
   }, []);
 
   const handleNoteChange = (e) => {
@@ -57,25 +55,33 @@ const App = () => {
     });
   };
 
+  const deleteNote = async (id) => {
+    await deleteItem(id);
+    const filteredNotes = [...notes].filter((note) => note.id !== id);
+    setNotes(filteredNotes);
+  };
+
   return (
-    <div>
-      <h1>Notes</h1>
-      <button onClick={() => setShowAll(!showAll)}>
-        {showAll ? "show important" : "show all"}
-      </button>
-      <form onSubmit={addNote}>
-        <input type="text" value={newNote} onChange={handleNoteChange} />
-        <button type="submit">add note</button>
-      </form>
-      <ul>
-        {notesToShow.map((note) => (
-          <Notes
-            key={note.id}
-            note={note}
-            toggleImportance={() => handleToggleImportance(note.id)}
-          />
-        ))}
-      </ul>
+    <div className="font-mono my-10 mx-40 min-w-[400px] max-w-[900px]">
+      <h1 className="text-blue-800 text-[5rem]">Notes</h1>
+      <div className="flex justify-between">
+        <NoteForm
+          addNote={addNote}
+          onChangeNote={handleNoteChange}
+          newNote={newNote}
+        />
+        <button
+          className="bg-blue-300 px-4 py-2 rounded-xl shadow-lg border border-slate-700"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "show important" : "show all"}
+        </button>
+      </div>
+      <NoteList
+        onDelete={deleteNote}
+        notesToShow={notesToShow}
+        toggleImportance={handleToggleImportance}
+      />
     </div>
   );
 };

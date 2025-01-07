@@ -22,6 +22,16 @@ const create = async (newObject) => {
   }
 };
 
+const deleteItem = async (id) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 const update = async (id, newObject) => {
   try {
     const response = await axios.put(`${baseUrl}/${id}`, newObject);
@@ -32,4 +42,4 @@ const update = async (id, newObject) => {
   }
 };
 
-export { getAll, create, update };
+export { getAll, create, deleteItem, update };

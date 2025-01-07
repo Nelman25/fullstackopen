@@ -3,8 +3,13 @@ import axios from "axios";
 const baseUrl = "/api/persons";
 
 const getAll = async () => {
-  const request = await axios.get(baseUrl);
-  return request.data;
+  try {
+    const response = await axios.get(baseUrl);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 const create = async (newObject) => {
