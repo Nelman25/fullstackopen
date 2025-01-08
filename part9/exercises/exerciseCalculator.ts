@@ -1,6 +1,6 @@
 import { isNotNumber } from "../utils";
 
-interface Output {
+interface Result {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -15,32 +15,31 @@ interface Inputs {
   days: number[];
 }
 
-const parseArgumentsss = (args: string[]): Inputs => {
+const parseArguments = (args: string[]): Inputs => {
   if (args.length < 4) throw new Error("Not enough arguments.");
 
   const inputs = args.slice(2);
-  let target: number;
+  const target = Number(inputs[0]);
   let days: number[] = [];
 
-  inputs.forEach((arg, index) => {
+  inputs.forEach((arg) => {
     if (isNotNumber(arg))
       throw new Error("Provided values are not all numbers, please try again.");
-    if (index === 0) target = Number(arg);
     else days.push(Number(arg));
   });
 
   return { target, days };
 };
 
-const calculateExercises = (days: number[], target: number): Output => {
+const calculateExercises = (days: number[], target: number): Result => {
   const periodLength = days.length;
   const trainingDays = days.filter((i) => i > 0).length;
   const total = days.reduce((acc, total) => acc + total, 0);
   const average = total / periodLength;
   const success = average > target;
   const score: number = (average / target) * 100;
-  let rating: number;
-  let ratingDescription: string;
+  let rating: number = 1;
+  let ratingDescription: string = "";
 
   if (score >= 66.7 && score <= 100) {
     rating = 3;
@@ -50,7 +49,7 @@ const calculateExercises = (days: number[], target: number): Output => {
     rating = 2;
     ratingDescription =
       "You had a decent week! There's room for improvement, but you're on the right track. Stay consistent!";
-  } else if (score >= 0 && score <= 33.3) {
+  } else {
     rating = 1;
     ratingDescription =
       "You struggled this week. Don't give up—every step counts. Keep pushing, and next week will be better!";
@@ -68,7 +67,7 @@ const calculateExercises = (days: number[], target: number): Output => {
 };
 
 try {
-  const { target, days } = parseArgumentsss(process.argv);
+  const { target, days } = parseArguments(process.argv);
   console.log(calculateExercises(days, target));
 } catch (error: unknown) {
   let errorMessage = "Something went wrong: ";

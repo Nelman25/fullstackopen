@@ -1,3 +1,5 @@
+import { isNotNumber } from "../utils";
+
 interface PersonInfo {
   height: number;
   weight: number;
@@ -9,10 +11,9 @@ type BMICatergories =
   | "Overweight"
   | "Obesity";
 
-const parseArgument = (args: string[]) => {
+const parseArguments = (args: string[]): PersonInfo => {
   if (args.length < 4) throw new Error("Not enough arguments!");
   if (args.length > 4) throw new Error("Too many arguments!");
-
 
   const height = Number(args[2]);
   const weight = Number(args[3]);
@@ -20,7 +21,7 @@ const parseArgument = (args: string[]) => {
   if (height <= 0) throw new Error("height must be greater than 0.");
   if (weight <= 0) throw new Error("weight must be greater than 0.");
 
-  if (!isNaN(height) && !isNaN(weight)) {
+  if (!isNotNumber(height) && !isNotNumber(weight)) {
     return { height, weight };
   }
 
@@ -38,7 +39,7 @@ const calculateBMI = (weight: number, height: number): BMICatergories => {
 };
 
 try {
-  const { weight, height } = parseArgument(process.argv);
+  const { weight, height } = parseArguments(process.argv);
   console.log(calculateBMI(weight, height));
 } catch (error: unknown) {
   let errorMessage = "Something went wrong. ";
