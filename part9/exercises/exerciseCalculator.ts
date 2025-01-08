@@ -1,3 +1,5 @@
+import { isNotNumber } from "../utils";
+
 interface Output {
   periodLength: number;
   trainingDays: number;
@@ -7,6 +9,28 @@ interface Output {
   target: number;
   average: number;
 }
+
+interface Inputs {
+  target: number;
+  days: number[];
+}
+
+const parseArgumentsss = (args: string[]): Inputs => {
+  if (args.length < 4) throw new Error("Not enough arguments.");
+
+  const inputs = args.slice(2);
+  let target: number;
+  let days: number[] = [];
+
+  inputs.forEach((arg, index) => {
+    if (isNotNumber(arg))
+      throw new Error("Provided values are not all numbers, please try again.");
+    if (index === 0) target = Number(arg);
+    else days.push(Number(arg));
+  });
+
+  return { target, days };
+};
 
 const calculateExercises = (days: number[], target: number): Output => {
   const periodLength = days.length;
@@ -44,7 +68,8 @@ const calculateExercises = (days: number[], target: number): Output => {
 };
 
 try {
-  console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+  const { target, days } = parseArgumentsss(process.argv);
+  console.log(calculateExercises(days, target));
 } catch (error: unknown) {
   let errorMessage = "Something went wrong: ";
   if (error instanceof Error) {
