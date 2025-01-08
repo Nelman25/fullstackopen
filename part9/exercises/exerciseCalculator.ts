@@ -22,7 +22,7 @@ const parseArguments = (args: string[]): Inputs => {
   const target = Number(inputs[0]);
   let days: number[] = [];
 
-  inputs.forEach((arg) => {
+  inputs.slice(1).forEach((arg) => {
     if (isNotNumber(arg))
       throw new Error("Provided values are not all numbers, please try again.");
     else days.push(Number(arg));
@@ -41,7 +41,7 @@ const calculateExercises = (days: number[], target: number): Result => {
   let rating: number = 1;
   let ratingDescription: string = "";
 
-  if (score >= 66.7 && score <= 100) {
+  if (score >= 66.7) {
     rating = 3;
     ratingDescription =
       "You did well this week! Keep it up—your dedication is paying off!";
@@ -49,7 +49,7 @@ const calculateExercises = (days: number[], target: number): Result => {
     rating = 2;
     ratingDescription =
       "You had a decent week! There's room for improvement, but you're on the right track. Stay consistent!";
-  } else {
+  } else{
     rating = 1;
     ratingDescription =
       "You struggled this week. Don't give up—every step counts. Keep pushing, and next week will be better!";
