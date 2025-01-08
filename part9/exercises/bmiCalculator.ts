@@ -35,7 +35,7 @@ const calculateBMI = (weight: number, height: number): BMICatergories => {
   if (BMI < 18.5) return "Underweight";
   else if (BMI >= 18.5 && BMI <= 24.9) return "Normal weight";
   else if (BMI >= 25 && BMI <= 29.9) return "Overweight";
-  else if (BMI >= 30) return "Obesity";
+  else return "Obesity";
 };
 
 try {

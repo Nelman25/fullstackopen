@@ -49,7 +49,7 @@ const calculateExercises = (days: number[], target: number): Result => {
     rating = 2;
     ratingDescription =
       "You had a decent week! There's room for improvement, but you're on the right track. Stay consistent!";
-  } else{
+  } else {
     rating = 1;
     ratingDescription =
       "You struggled this week. Don't give up—every step counts. Keep pushing, and next week will be better!";
