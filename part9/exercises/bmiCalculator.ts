@@ -28,7 +28,14 @@ const parseArguments = (args: string[]): PersonInfo => {
   throw new Error("Provided values are not numbers, please try again.");
 };
 
-const calculateBMI = (weight: number, height: number): BMICatergories => {
+export const calculateBMI = (
+  weight: number,
+  height: number
+): BMICatergories => {
+  if (isNotNumber(weight) || isNotNumber(height)) {
+    throw new Error("Provided values are not numbers, please try again.");
+  }
+
   const heightInMeters = height / 100;
   const BMI = weight / Math.pow(heightInMeters, 2);
 
@@ -39,8 +46,10 @@ const calculateBMI = (weight: number, height: number): BMICatergories => {
 };
 
 try {
-  const { weight, height } = parseArguments(process.argv);
-  console.log(calculateBMI(weight, height));
+  if (require.main === module) {
+    const { weight, height } = parseArguments(process.argv);
+    console.log(calculateBMI(weight, height));
+  }
 } catch (error: unknown) {
   let errorMessage = "Something went wrong. ";
   if (error instanceof Error) {
