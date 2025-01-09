@@ -18,8 +18,15 @@ app.get("/bmi", ({ query }: Request, res: Response) => {
 
   try {
     res.send({ weight, height, bmi: calculateBMI(w, h) });
-  } catch {
-    res.status(400).json({ error: "malformed parameters." });
+  } catch (error: unknown) {
+    res
+      .status(400)
+      .json({
+        error:
+          error instanceof Error
+            ? `Something went wrong: ${error.message}`
+            : "malformed parameters.",
+      });
   }
 });
 
@@ -30,8 +37,13 @@ app.post("/exercises", (req: Request, res: Response) => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     res.send(calculateExercises(daily_exercises, target));
-  } catch {
-    res.status(400).json({ error: "malformed parameters" });
+  } catch (error: unknown) {
+    res.status(400).json({
+      error:
+        error instanceof Error
+          ? `Something went wrong: ${error.message}`
+          : "malformed parameters",
+    });
   }
 });
 
