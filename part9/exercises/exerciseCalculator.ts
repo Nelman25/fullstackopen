@@ -20,7 +20,7 @@ const parseArguments = (args: string[]): Inputs => {
 
   const inputs = args.slice(2);
   const target = Number(inputs[0]);
-  let days: number[] = [];
+  const days: number[] = [];
 
   inputs.slice(1).forEach((arg) => {
     if (isNotNumber(arg))
@@ -31,7 +31,11 @@ const parseArguments = (args: string[]): Inputs => {
   return { target, days };
 };
 
-const calculateExercises = (days: number[], target: number): Result => {
+export const calculateExercises = (days: number[], target: number): Result => {
+  // checks if all values provided are numbers (terminal or network request) 
+  if (days.some((day) => isNaN(Number(day))) || isNaN(Number(target))) {
+    throw new Error("Provided values are not all numbers, please try again.");
+  }
   const periodLength = days.length;
   const trainingDays = days.filter((i) => i > 0).length;
   const total = days.reduce((acc, total) => acc + total, 0);
@@ -67,8 +71,10 @@ const calculateExercises = (days: number[], target: number): Result => {
 };
 
 try {
-  const { target, days } = parseArguments(process.argv);
-  console.log(calculateExercises(days, target));
+  if (require.main === module) {
+    const { target, days } = parseArguments(process.argv);
+    console.log(calculateExercises(days, target));
+  }
 } catch (error: unknown) {
   let errorMessage = "Something went wrong: ";
   if (error instanceof Error) {

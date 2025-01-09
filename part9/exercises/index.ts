@@ -1,7 +1,10 @@
 import express, { Request, Response } from "express";
 import { calculateBMI } from "./bmiCalculator";
+import { calculateExercises } from "./exerciseCalculator";
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/hello", (_req, res) => {
   res.send("Hello Full Stack!");
@@ -17,6 +20,18 @@ app.get("/bmi", ({ query }: Request, res: Response) => {
     res.send({ weight, height, bmi: calculateBMI(w, h) });
   } catch {
     res.status(400).json({ error: "malformed parameters." });
+  }
+});
+
+app.post("/exercises", (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { daily_exercises, target } = req.body;
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    res.send(calculateExercises(daily_exercises, target));
+  } catch {
+    res.status(400).json({ error: "malformed parameters" });
   }
 });
 
