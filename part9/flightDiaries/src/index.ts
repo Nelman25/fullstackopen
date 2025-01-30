@@ -13,6 +13,8 @@ app.get("/ping", (_req: Request, res: Response) => {
 
 app.use("/api/diaries", diaryRouter);
 
+app.use("/api/diaries/:id", diaryRouter);
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
