@@ -17,7 +17,7 @@ export const parseVisibility = (visibility: unknown): Visibility => {
 const isWeather = (param: string): param is Weather => {
   return Object.values(Weather)
     .map((v) => v.toString())
-    .includes(param);
+    .includes(param); 
 };
 
 export const parseWeather = (weather: unknown): Weather => {
