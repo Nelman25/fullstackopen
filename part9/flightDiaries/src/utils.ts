@@ -1,4 +1,5 @@
 import { NewDiaryEntry, Visibility, Weather } from "./types";
+import { z } from "zod";
 
 const isVisibility = (param: string): param is Visibility => {
   return Object.values(Visibility)
@@ -17,7 +18,7 @@ export const parseVisibility = (visibility: unknown): Visibility => {
 const isWeather = (param: string): param is Weather => {
   return Object.values(Weather)
     .map((v) => v.toString())
-    .includes(param); 
+    .includes(param);
 };
 
 export const parseWeather = (weather: unknown): Weather => {
@@ -63,11 +64,12 @@ const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
     "visibility" in object &&
     "date" in object
   ) {
+    // with zod, we can replace the parsers for primitive values like this:
     const newEntry: NewDiaryEntry = {
-      comment: parseComment(object.comment),
-      weather: parseWeather(object.weather),
-      visibility: parseVisibility(object.visibility),
-      date: parseDate(object.date),
+      comment: z.string().optional().parse(object.comment),
+      weather: z.nativeEnum(Weather).parse(object.weather),
+      visibility: z.nativeEnum(Visibility).parse(object.visibility),
+      date: z.string().date().parse(object.date),
     };
 
     return newEntry;
