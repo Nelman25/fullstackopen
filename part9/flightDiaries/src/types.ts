@@ -18,12 +18,8 @@ export enum Visibility {
   Poor = "poor",
 }
 
-export interface DiaryEntry {
+export interface DiaryEntry extends NewDiaryEntry {
   id: number;
-  date: string;
-  weather: Weather;
-  visibility: Visibility;
-  comment?: string;
 }
 // USING TYPE ALIASES
 export type NonSensitiveDiaryEntry = Omit<DiaryEntry, "comment">;
