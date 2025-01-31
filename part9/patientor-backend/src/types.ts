@@ -7,14 +7,18 @@ export interface Diagnosis {
   latin?: string;
 }
 
-export interface Patient {
+export interface Patient extends NewPatientData {
   id: string;
-  name: string;
-  dateOfBirth: string;
-  ssn: string;
-  gender: string;
-  occupation: string;
 }
+
+// export interface Patient {
+//   id: string;
+//   name: string;
+//   dateOfBirth: string;
+//   ssn: string;
+//   gender: string;
+//   occupation: string;
+// }
 
 export enum Gender {
   Male = "male",
