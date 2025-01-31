@@ -23,7 +23,7 @@ export interface Patient extends NewPatientData {
 export enum Gender {
   Male = "male",
   Female = "female",
-  Others = "others",
+  Others = "other",
 }
 
 // Patient type without the ssn
