@@ -1,13 +1,13 @@
-interface ContentProps {
-  name: string;
-  exerciseCount: number;
-}
+import { CoursePart } from "../App";
+import Part from "./Part";
 
-const Content = ({ name, exerciseCount }: ContentProps) => {
+const Content = ({ courseParts }: { courseParts: CoursePart[] }) => {
   return (
-    <p>
-      {name} {exerciseCount}
-    </p>
+    <div>
+      {courseParts.map((part) => (
+        <Part part={part} />
+      ))}
+    </div>
   );
 };
 
